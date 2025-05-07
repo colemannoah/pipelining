@@ -1,6 +1,7 @@
 import logging
 import warnings
 from rich.logging import RichHandler
+from rich.traceback import install
 from tqdm import TqdmExperimentalWarning
 
 warnings.filterwarnings("ignore", category=TqdmExperimentalWarning)
@@ -21,6 +22,8 @@ def configure_logging(level: int = logging.INFO) -> None:
 
     if any(isinstance(h, RichHandler) for h in root.handlers):
         return
+
+    install(show_locals=True)
 
     logging.basicConfig(
         level=level,
