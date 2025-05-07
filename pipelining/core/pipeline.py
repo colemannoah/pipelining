@@ -48,6 +48,7 @@ class Pipeline:
 
         self.logger = getLogger(name)
         self.stages: list[Stage] = stages
+        self.name = name
 
     def run(self, context: dict | None = None) -> dict:
         """
@@ -77,7 +78,7 @@ class Pipeline:
         context = context or {}
         context["logger"] = self.logger
 
-        self.logger.info("Starting pipeline")
+        self.logger.info(f"Starting {self.name}")
 
         for stage in self.stages:
             stage_name = stage.__class__.__name__
@@ -93,5 +94,5 @@ class Pipeline:
 
             self.logger.info(f"Stage {stage_name} completed successfully!")
 
-        self.logger.info("Pipeline completed successfully!")
+        self.logger.info(f"{self.name} completed successfully!")
         return context
