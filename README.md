@@ -46,6 +46,22 @@ A simple example like this will output:
                       INFO     Example Pipeline completed successfully!                                                                                                            
 ```
 
+## Development
+
+To setup a Python environment for this project, I recommend using Pixi - I use it and like it. You can enter the workspace using:
+
+```bash
+$ pixi shell
+...
+```
+
+The following self-explanatory tasks are available for usage.
+
+- `ruff`
+- `mypy`
+- `test`
+- `coverage`
+
 ## Testing
 
 Tests can be run through [Pixi](https://pixi.sh/latest/) with:
