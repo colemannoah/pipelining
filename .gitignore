@@ -4,3 +4,17 @@
 # pixi environments
 .pixi
 *.egg-info
+
+# python
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# testing & coverage
+.coverage
+.coverage.*
+htmlcov/
+
+# vscode
+.vscode/
