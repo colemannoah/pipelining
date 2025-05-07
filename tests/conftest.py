@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Any, Callable
 from pipelining.core.stage import Stage
 
 
@@ -21,7 +21,7 @@ class DummyStage(Stage):
         self.name = name
         self.action = action
 
-    def run(self, context: dict) -> None:
+    def run(self, context: dict[str, Any]) -> None:
         context.setdefault("order", []).append(self.name)
 
         if callable(self.action):

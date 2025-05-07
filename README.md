@@ -21,7 +21,7 @@ class TextStage(Stage):
         super().__init__(name)
         self.message = message
 
-    def run(self, context: dict) -> None:
+    def run(self, context: dict[str, Any]) -> None:
         self.logger.info(f"{self.name}: {self.message}")
 
 
