@@ -23,7 +23,6 @@ jobs:
       - uses: prefix-dev/setup-pixi@v0.8.3
         with:
           pixi-version: v0.46.0
-          cache: true
 
       - name: Run mypy checks
         run: pixi run mypy

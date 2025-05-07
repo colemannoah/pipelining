@@ -2,7 +2,7 @@
 authors = ["colemannoah <colemanmnoah@gmail.com>"]
 channels = ["conda-forge"]
 name = "pipelining"
-platforms = ["osx-arm64"]
+platforms = ["osx-arm64", "linux-64"]
 version = "0.1.0"
 
 [tasks]
