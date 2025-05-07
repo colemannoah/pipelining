@@ -33,11 +33,11 @@ def test_configure_logging_adds_rich_handler() -> None:
     "expected_messages",
     [
         [
-            "Starting pipeline",
+            "Starting root",
             "Running stage: LogStage",
             "Hello World",
             "Stage LogStage completed successfully!",
-            "Pipeline completed successfully!",
+            "root completed successfully!",
         ]
     ],
 )
