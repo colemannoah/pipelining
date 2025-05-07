@@ -1,5 +1,9 @@
 import logging
+import warnings
 from rich.logging import RichHandler
+from tqdm import TqdmExperimentalWarning
+
+warnings.filterwarnings("ignore", category=TqdmExperimentalWarning)
 
 
 def configure_logging(level: int = logging.INFO) -> None:
