@@ -1,4 +1,7 @@
 from logging import INFO, getLogger
+from typing import Any, Iterable
+
+from tqdm.rich import tqdm
 
 from pipelining.core.stage import Stage
 from pipelining.util.logger import configure_logging
@@ -30,14 +33,14 @@ class Pipeline:
     """
 
     def __init__(
-        self, stages: list[Stage], name: str = "Pipeline", log_level: int = INFO
+        self, stages: Iterable[Stage], name: str = "Pipeline", log_level: int = INFO
     ) -> None:
         """
         Initialize the Pipeline with a list of stages and a logger.
 
         Parameters
         ----------
-        stages : list[Stage]
+        stages : Iterable[Stage]
             A list of stages to be executed
         name : str, optional
             A name for the pipeline, by default "Pipeline"
@@ -47,10 +50,12 @@ class Pipeline:
         configure_logging(log_level)
 
         self.logger = getLogger(name)
-        self.stages: list[Stage] = stages
+        self.stages: list[Stage] = list(stages)
         self.name = name
 
-    def run(self, context: dict | None = None) -> dict:
+    def run(
+        self, context: dict[str, Any] | None = None, use_tqdm: bool = False
+    ) -> dict[str, Any]:
         """
         Execute all stages in sequence.
 
@@ -80,19 +85,39 @@ class Pipeline:
 
         self.logger.info(f"Starting {self.name}")
 
-        for stage in self.stages:
-            stage_name = stage.__class__.__name__
-            stage.logger = self.logger.getChild(stage_name)
-
-            self.logger.info(f"Running stage: {stage_name}")
-
-            try:
-                stage.run(context)
-            except Exception as e:
-                self.logger.error(f"Error in stage {stage_name}: {e}")
-                raise
-
-            self.logger.info(f"Stage {stage_name} completed successfully!")
+        if use_tqdm:
+            with tqdm(
+                self.stages, desc="Pipeline Progress", unit="stage"
+            ) as progress_bar:
+                for stage in progress_bar:
+                    self._run_stage(stage, context)
+        else:
+            for stage in self.stages:
+                self._run_stage(stage, context)
 
         self.logger.info(f"{self.name} completed successfully!")
         return context
+
+    def _run_stage(self, stage: Stage, context: dict[str, Any]) -> None:
+        """
+        Run a single stage with the provided context.
+
+        Parameters
+        ----------
+        stage : Stage
+            The stage to run.
+        context : dict
+            The context to pass to the stage.
+        """
+        stage_name = stage.__class__.__name__
+        stage.logger = self.logger.getChild(stage_name)
+
+        self.logger.info(f"Running stage: {stage_name}")
+
+        try:
+            stage.run(context)
+        except Exception as e:
+            self.logger.error(f"Error in stage {stage_name}: {e}")
+            raise
+
+        self.logger.info(f"Stage {stage_name} completed successfully!")
