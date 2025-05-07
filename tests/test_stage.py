@@ -1,3 +1,4 @@
+from typing import Any
 import pytest
 
 from pipelining.core.stage import Stage
@@ -20,7 +21,7 @@ def test_bad_subclass() -> None:
 def test_stage_run_method() -> None:
     dummy_stage = DummyStage("test", lambda c: c.update({"ran": True}))
 
-    context: dict = {}
+    context: dict[str, Any] = {}
     dummy_stage.run(context)
 
     assert context["ran"] is True

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from logging import Logger, getLogger
+from typing import Any
 
 
 class Stage(ABC):
@@ -26,7 +27,7 @@ class Stage(ABC):
         self.name = name
 
     @abstractmethod
-    def run(self, context: dict) -> None:
+    def run(self, context: dict[str, Any]) -> None:
         """
         Run the stage's logic.
 
