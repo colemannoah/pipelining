@@ -1,0 +1,88 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pipelining-colemann"
+dynamic = ["version"]
+description = 'A lightweight, object-orientated pipeline framework in Python'
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "colemannoah", email = "colemanmnoah@gmail.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "ruff>=0.11.8,<0.12",
+  "mypy>=1.15.0,<2",
+  "python>=3.13.3,<3.14",
+  "pytest>=8.3.5,<9",
+  "rich>=14.0.0,<15",
+  "pytest-cov>=6.1.1,<7",
+  "tqdm>=4.67.1,<5",
+]
+
+[project.urls]
+Documentation = "https://github.com/colemannoah/pipelining#readme"
+Issues = "https://github.com/colemannoah/pipelining/issues"
+Source = "https://github.com/colemannoah/pipelining"
+
+[tool.hatch.version]
+path = "pipelining/__about__.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/.github",
+  "/.mypy_cache",
+  "/.pixi",
+  "/.pytest_cache",
+  "/.ruff_cache",
+  "/.vscode",
+  "/htmlcov",
+  "/**/__pycache__/*",
+  "/.coverage",
+  "/.coverage.*",
+  "/example.py",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["pipelining"]
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:pipelining tests}"
+
+[tool.coverage.run]
+source_pkgs = ["pipelining", "tests"]
+branch = true
+parallel = true
+omit = [
+  "pipelining/__about__.py",
+]
+
+[tool.coverage.paths]
+pipelining = ["pipelining", "*/pipelining"]
+tests = ["tests", "*/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
