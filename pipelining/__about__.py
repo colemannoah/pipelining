@@ -1,0 +1,6 @@
+__title__ = "pipelining-colemann"
+__version__ = "0.0.1"
+__author__ = "Noah Coleman"
+__license__ = "MIT"
+__email__ = "colemanmnoah@gmail.com"
+__description__ = "A lightweight, object-orientated pipeline framework in Python"
