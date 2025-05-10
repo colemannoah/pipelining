@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
@@ -21,13 +21,8 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-  "ruff>=0.11.8,<0.12",
-  "mypy>=1.15.0,<2",
-  "python>=3.13.3,<3.14",
-  "pytest>=8.3.5,<9",
-  "rich>=14.0.0,<15",
-  "pytest-cov>=6.1.1,<7",
-  "tqdm>=4.67.1,<5",
+  "rich",
+  "tqdm",
 ]
 
 [project.urls]
@@ -36,7 +31,7 @@ Issues = "https://github.com/colemannoah/pipelining/issues"
 Source = "https://github.com/colemannoah/pipelining"
 
 [tool.hatch.version]
-path = "pipelining/__about__.py"
+source = "vcs"
 
 [tool.hatch.build.targets.sdist]
 exclude = [
@@ -55,6 +50,12 @@ exclude = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["pipelining"]
+
+[tool.hatch.build.hooks.vcs]
+version-file = "_version.py"
+
+[tool.hatch.version.raw-options]
+version_scheme = "no-guess-dev"
 
 [tool.hatch.envs.types]
 extra-dependencies = [

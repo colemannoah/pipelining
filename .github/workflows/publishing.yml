@@ -15,7 +15,12 @@ jobs:
 
     name: Publish
     runs-on: ubuntu-latest
-    environment: pypi
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pipelining-colemann
+
+    permissions:
+      id-token: write # IMPORTANT: this permission is mandatory for trusted publishing
 
     steps:
       - name: Clone repository
@@ -29,8 +34,5 @@ jobs:
       - name: Build package
         run: hatch build
 
-      - name: Publish package
-        run: hatch publish -n
-        env:
-          HATCH_INDEX_USER: ${{ secrets.PYPI_USERNAME }}
-          HATCH_INDEX_AUTH: ${{ secrets.PYPI_AUTH }}
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1

@@ -24,3 +24,4 @@ example.py
 
 # dist
 dist/
+_version.py
