@@ -1,0 +1,36 @@
+name: Publish to PyPi
+
+on:
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  publish:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    name: Publish
+    runs-on: ubuntu-latest
+    environment: pypi
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Hatch
+        uses: pypa/hatch@install
+
+      - name: Build package
+        run: hatch build
+
+      - name: Publish package
+        run: hatch publish -n
+        env:
+          HATCH_INDEX_USER: ${{ secrets.PYPI_USERNAME }}
+          HATCH_INDEX_AUTH: ${{ secrets.PYPI_AUTH }}
