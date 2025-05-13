@@ -21,3 +21,7 @@ htmlcov/
 
 # other
 example.py
+
+# dist
+dist/
+_version.py
