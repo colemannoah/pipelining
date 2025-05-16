@@ -8,6 +8,7 @@ A lightweight, object-orientated pipeline framework in Python, with Rich-powered
 - **Modular Stages**: Each processing step can be defined by subclassing the simple `Stage` interface.
 - **Pipeline Orchestration**: Stages can be composed into ordered pipelines with automatic logging injection.
 - **Pretty Logging**: Good looking logging, powered by [Rich](https://rich.readthedocs.io/en/stable/logging.html)
+- **Concurrency**: The `MultiStepStage` supports parallelism of tasks.
 
 ## Installation
 
@@ -52,6 +53,50 @@ A simple example like this will output:
                       INFO     Stage TextStage completed successfully!                                                                                                             
                       INFO     Example Pipeline completed successfully!                                                                                                            
 ```
+
+## Concurrency Example
+
+```python
+class TextStage(Stage):
+    def __init__(self, name: str, message: str) -> None:
+        super().__init__(name)
+        self.message = message
+
+    def run(self, _: dict[str, Any]) -> None:
+        self.logger.info(f"{self.name}: {self.message}")
+
+
+def make_step(name: str, delay: float = 0.1) -> Callable:
+    def step(context):
+        sleep(delay)
+        context[name] = f"{name}_done"
+
+    return step
+
+
+multistep_stage = MultiStepStage(
+    name="Multi-Step Stage Example",
+    steps=[
+        make_step("Step A", delay=0.2),
+        make_step("Step B", delay=5),
+        make_step("Step C", delay=0.1),
+    ],
+    parallel=True,
+)
+
+text_one = TextStage(name="Text Stage One", message="This is the first text stage.")
+text_two = TextStage(name="Text Stage Two", message="This is the second text stage.")
+
+pipeline = Pipeline(
+    stages=[text_one, multistep_stage, text_two], name="Example Pipeline"
+)
+
+context: dict[str, Any] = {}
+
+pipeline.run(context=context, use_tqdm=True)
+```
+
+This is an example of a pipeline with both normal and multi-step stages - with the multi-step stage running its steps in parallel.
 
 ## Development
 
