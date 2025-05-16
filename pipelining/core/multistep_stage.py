@@ -23,11 +23,16 @@ class MultiStepStage(Stage):
     """
 
     def __init__(
-        self, name: str, steps: Iterable[Callable], parallel: bool = False
+        self,
+        name: str,
+        steps: Iterable[Callable],
+        parallel: bool = False,
+        max_workers: int = 4,
     ) -> None:
         super().__init__(name)
         self.steps: list[Callable] = list(steps)
         self.parallel = parallel
+        self.max_workers = max_workers
 
     def run(self, context: dict[str, Any]) -> None:
         """
@@ -53,11 +58,10 @@ class MultiStepStage(Stage):
                 f"Running {self.name} in parallel mode with {len(self.steps)} step(s)."
             )
 
-            with ThreadPoolExecutor() as executor:
+            with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
                 futures = {executor.submit(step, context): step for step in self.steps}
 
                 for future in as_completed(futures):
-                    self.logger.info(f"\tRunning step: {futures[future].__name__}")
                     step = futures[future]
 
                     try:
