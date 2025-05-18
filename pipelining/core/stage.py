@@ -20,6 +20,8 @@ class Stage(ABC):
     ----------
     logger : logging.Logger
         Logger instance for this stage, injected by the Pipeline.
+    name : str
+        Name of the stage, used for logging and identification.
     """
 
     def __init__(self, name: str) -> None:

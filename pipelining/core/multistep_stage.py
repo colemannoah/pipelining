@@ -15,11 +15,19 @@ class MultiStepStage(Stage):
         An iterable containing callables to be run throughout the stage
     parallel : bool, optional
         If True, the steps will be run in parallel. Default is False.
+    max_workers : int, optional
+        The maximum number of workers to use for parallel execution. Default is 4.
 
     Attributes
     ----------
     logger : logging.Logger
         Logger instance for this stage, injected by the Pipeline.
+    steps : list[Callable]
+        List of callables to be executed in this stage.
+    parallel : bool
+        If True, the steps will be run in parallel.
+    max_workers : int
+        The maximum number of workers to use for parallel execution.
     """
 
     def __init__(

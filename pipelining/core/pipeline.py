@@ -30,6 +30,8 @@ class Pipeline:
         The sequence of stage instances to execute.
     logger : logging.Logger
         Root logger for the entire pipeline, configured by the application.
+    name : str
+        Name of the pipeline, used for logging and identification.
     """
 
     def __init__(
