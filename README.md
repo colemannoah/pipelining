@@ -1,6 +1,8 @@
 
 # Pipelining
 
+[![PyPI Downloads](https://static.pepy.tech/badge/pipelining-colemann)](https://pepy.tech/projects/pipelining-colemann)
+
 A lightweight, object-orientated pipeline framework in Python, with Rich-powered logging, and abstract semantics.
 
 ## Features
