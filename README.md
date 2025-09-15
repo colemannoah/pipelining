@@ -14,7 +14,7 @@ A lightweight, object-orientated pipeline framework in Python, with Rich-powered
 
 ## Installation
 
-This package is built for **Python 3.13**, as that is the version I use the most. I am happy to extend it for other versions.
+This package is built for **Python 3.10** or greater.
 
 Install `pipelining-colemann` through [PyPi](https://pypi.org/project/pipelining-colemann/) with:
 
