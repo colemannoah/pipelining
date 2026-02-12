@@ -4,8 +4,7 @@ from typing import Any
 
 
 class Stage(ABC):
-    """
-    Base class for a single pipeline stage.
+    """Base class for a single pipeline stage.
 
     Subclasses must implement the `run` method. Before execution,
     the Pipeline will inject a per-stage logger into the `logger`
@@ -22,16 +21,24 @@ class Stage(ABC):
         Logger instance for this stage, injected by the Pipeline.
     name : str
         Name of the stage, used for logging and identification.
+
     """
 
     def __init__(self, name: str) -> None:
+        """Initialize the Stage with a name.
+
+        Parameters
+        ----------
+        name : str
+            A name for the stage.
+
+        """
         self.logger: Logger = getLogger("undefined")
         self.name = name
 
     @abstractmethod
     def run(self, context: dict[str, Any]) -> None:
-        """
-        Run the stage's logic.
+        """Run the stage's logic.
 
         Parameters
         ----------
@@ -43,4 +50,5 @@ class Stage(ABC):
         Exception
             Any exception raised here will be caught and re-raised by the Pipeline
             after logging.
+
         """
