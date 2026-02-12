@@ -1,5 +1,6 @@
+from collections.abc import Iterable
 from logging import INFO, getLogger
-from typing import Any, Iterable
+from typing import Any
 
 from tqdm.rich import tqdm
 
@@ -8,8 +9,7 @@ from pipelining.util.logger import configure_logging
 
 
 class Pipeline:
-    """
-    Orchestrates execution of an ordered list of pipeline stages.
+    """Orchestrates execution of an ordered list of pipeline stages.
 
     A single “root” logger is created for the pipeline (named by `name`),
     and each stage receives a child logger before it runs. All stages share
@@ -32,13 +32,16 @@ class Pipeline:
         Root logger for the entire pipeline, configured by the application.
     name : str
         Name of the pipeline, used for logging and identification.
+
     """
 
     def __init__(
-        self, stages: Iterable[Stage], name: str = "Pipeline", log_level: int = INFO
+        self,
+        stages: Iterable[Stage],
+        name: str = "Pipeline",
+        log_level: int = INFO,
     ) -> None:
-        """
-        Initialize the Pipeline with a list of stages and a logger.
+        """Initialize the Pipeline with a list of stages and a logger.
 
         Parameters
         ----------
@@ -48,6 +51,7 @@ class Pipeline:
             A name for the pipeline, by default "Pipeline"
         log_level : int, optional
             The logging level for the pipeline, by default INFO
+
         """
         configure_logging(log_level)
 
@@ -56,10 +60,12 @@ class Pipeline:
         self.name = name
 
     def run(
-        self, context: dict[str, Any] | None = None, use_tqdm: bool = False
+        self,
+        context: dict[str, Any] | None = None,
+        *,
+        use_tqdm: bool = False,
     ) -> dict[str, Any]:
-        """
-        Execute all stages in sequence.
+        """Execute all stages in sequence.
 
         This will:
         1. Initialise or reuse the provided context dict.
@@ -71,6 +77,8 @@ class Pipeline:
         ----------
         context : dict, optional
             Initial shared context for stages (default is a new empty dict).
+        use_tqdm : bool, optional
+            If True, display a tqdm progress bar for stage execution. Default is False.
 
         Returns
         -------
@@ -81,6 +89,7 @@ class Pipeline:
         ------
         Exception
             Re-raises any exception from a stage after logging it.
+
         """
         context = context or {}
         context["logger"] = self.logger
@@ -89,7 +98,9 @@ class Pipeline:
 
         if use_tqdm:
             with tqdm(
-                self.stages, desc="Pipeline Progress", unit="stage"
+                self.stages,
+                desc="Pipeline Progress",
+                unit="stage",
             ) as progress_bar:
                 for stage in progress_bar:
                     self._run_stage(stage, context)
@@ -101,8 +112,7 @@ class Pipeline:
         return context
 
     def _run_stage(self, stage: Stage, context: dict[str, Any]) -> None:
-        """
-        Run a single stage with the provided context.
+        """Run a single stage with the provided context.
 
         Parameters
         ----------
@@ -110,6 +120,7 @@ class Pipeline:
             The stage to run.
         context : dict
             The context to pass to the stage.
+
         """
         stage_name = stage.__class__.__name__
         stage.logger = self.logger.getChild(stage_name)
@@ -118,8 +129,8 @@ class Pipeline:
 
         try:
             stage.run(context)
-        except Exception as e:
-            self.logger.error(f"Error in stage {stage_name}: {e}")
+        except Exception:
+            self.logger.exception(f"Error in stage {stage_name}")
             raise
 
         self.logger.info(f"Stage {stage_name} completed successfully!")

@@ -1,5 +1,7 @@
 from typing import Any
+
 import pytest
+
 from pipelining.core.pipeline import Pipeline
 from tests.conftest import DummyStage
 

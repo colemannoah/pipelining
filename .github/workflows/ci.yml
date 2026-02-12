@@ -23,11 +23,8 @@ jobs:
         with:
           pixi-version: v0.46.0
 
-      - name: Run mypy checks
-        run: pixi run mypy
-
-      - name: Run ruff checks
-        run: pixi run ruff
+      - name: Run all checks
+        run: pixi run check
 
   test:
     name: Test Python ${{ matrix.python-version }}
@@ -35,7 +32,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [py310, py311, py312, py313]
+        python-version: [py310, py311, py312, py313, py314]
 
     steps:
       - name: Clone repository
@@ -50,3 +47,6 @@ jobs:
 
       - name: Run tests with Python ${{ matrix.python-version }}
         run: pixi run -e ${{ matrix.python-version }} test
+
+      - name: Run version tests with Python ${{ matrix.python-version }}
+        run: pixi run -e ${{ matrix.python-version }} test-version

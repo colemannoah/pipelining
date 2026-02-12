@@ -1,5 +1,5 @@
 import logging
-from pytest import LogCaptureFixture
+
 import pytest
 from rich.logging import RichHandler
 
@@ -9,10 +9,6 @@ from tests.conftest import LogStage
 
 
 def test_configure_logging_adds_rich_handler() -> None:
-    """
-    configure_logging should add a RichHandler to the root logger,
-    and be idempotent (not add duplicates on repeated calls).
-    """
     root = logging.getLogger()
 
     # Clear existing handlers
@@ -38,15 +34,14 @@ def test_configure_logging_adds_rich_handler() -> None:
             "Hello World",
             "Stage LogStage completed successfully!",
             "root completed successfully!",
-        ]
+        ],
     ],
 )
 def test_pipeline_and_stage_logging(
-    expected_messages: list[str], caplog: LogCaptureFixture
+    expected_messages: list[str],
+    caplog: pytest.LogCaptureFixture,
 ) -> None:
-    """
-    Pipeline should inject child loggers and emit logs with correct names and levels.
-    """
+    """Pipeline should inject child loggers and emit logs with correct names and levels."""
     pipeline = Pipeline([LogStage("LogStage", "Hello World")], name="root")
     pipeline.run()
 

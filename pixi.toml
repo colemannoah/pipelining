@@ -1,43 +1,65 @@
 [workspace]
-authors = ["colemannoah <colemanmnoah@gmail.com>"]
-channels = ["conda-forge"]
-name = "pipelining"
-platforms = ["osx-arm64", "linux-64"]
-version = "0.1.0"
+    authors = ["colemannoah <colemanmnoah@gmail.com>"]
+    channels = ["conda-forge"]
+    name = "pipelining"
+    platforms = ["osx-arm64", "linux-64"]
+    version = "0.1.0"
 
 [tasks]
-test = "pytest -vs"
-ruff = "ruff check ."
-mypy = "mypy -p pipelining -p tests"
-coverage = "pytest --cov=pipelining --cov-branch --cov-report=term-missing --cov-report=html"
-build = "hatch build"
+    test = "pytest -vs"
+    lint = "ruff check ."
+    mypy = "mypy -p pipelining -p tests"
+    coverage = "pytest --cov=pipelining --cov-branch --cov-report=term-missing --cov-report=html"
+    build = "hatch build"
+    check = { depends-on = ["lint", "mypy", "test"] }
+
+    test-version = """
+        python --version && \
+        python -c 'import sys; print(f\"Testing with Python {sys.version_info.major}.{sys.version_info.minor}\")' && \
+        pytest -vs
+    """
+
+    test-all = """
+        pixi run -e py310 test-version && \
+        pixi run -e py311 test-version && \
+        pixi run -e py312 test-version && \
+        pixi run -e py313 test-version && \
+        pixi run -e py314 test-version
+    """
 
 [dependencies]
-ruff = ">=0.11.8,<0.12"
-mypy = ">=1.15.0,<2"
-python = ">=3.10,<3.14"
-pytest = ">=8.3.5,<9"
-rich = ">=14.0.0,<15"
-pytest-cov = ">=6.1.1,<7"
-tqdm = ">=4.67.1,<5"
+    python = ">=3.10.19,<3.15"
+    rich = ">=14.3.2,<15"
+    tqdm = ">=4.67.3,<5"
+
+[feature.dev.dependencies]
+    ruff = ">=0.15.0,<0.16"
+    mypy = ">=1.19.1,<2"
+    pytest = ">=9.0.2,<10"
+    pytest-cov = ">=7.0.0,<8"
+
+[feature.dev.pypi-dependencies]
+    types-tqdm = ">=4.67.3.20260205, <5"
 
 [feature.py310.dependencies]
-python = "~=3.10.0"
+    python = ">=3.10,<3.11"
 
 [feature.py311.dependencies]
-python = "~=3.11.0"
+    python = ">=3.11,<3.12"
 
 [feature.py312.dependencies]
-python = "~=3.12.0"
+    python = ">=3.12,<3.13"
 
 [feature.py313.dependencies]
-python = "~=3.13.0"
+    python = ">=3.13,<3.14"
+
+[feature.py314.dependencies]
+    python = ">=3.14,<3.15"
 
 [environments]
-py310 = ["py310"]
-py311 = ["py311"]
-py312 = ["py312"]
-py313 = ["py313"]
-
-[pypi-dependencies]
-types-tqdm = ">=4.67.0.20250417"
+    default = ["dev"]
+    py310 = ["py310", "dev"]
+    py311 = ["py311", "dev"]
+    py312 = ["py312", "dev"]
+    py313 = ["py313", "dev"]
+    py314 = ["py314", "dev"]
