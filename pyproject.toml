@@ -77,4 +77,4 @@
 
   [tool.ruff.lint]
     select = ["ALL"]
-    ignore = ["G004", "D100", "D104", "D203", "D213"]
+    ignore = ["G004", "D100", "D104", "D203", "D213", "CPY"]
